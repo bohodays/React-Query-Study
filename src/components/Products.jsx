@@ -7,11 +7,18 @@ export default function Products() {
     isLoading,
     error,
     data: products, // data를 products라는 이름으로 받는다.
-  } = useQuery(["products"], async () => {
-    console.log("fetching...");
-    return fetch(`data/products.json`).then((res) => res.json());
-  });
-  // const [loading, error, products] = useProducts({ salesOnly: checked });
+  } = useQuery(
+    ["products", checked],
+    async () => {
+      console.log("fetching...");
+      return fetch(`data/${checked ? "sale_" : ""}products.json`).then((res) =>
+        res.json()
+      );
+    },
+    {
+      staleTime: 1000 * 60 * 5, // 5분 (1000ms = 1s)
+    }
+  );
   const handleChange = () => setChecked((prev) => !prev);
 
   if (isLoading) return <p>Loading...</p>;
